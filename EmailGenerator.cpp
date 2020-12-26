@@ -12,15 +12,9 @@ string domainGenerator();
 
 int main() {
     // [A-Za-z0-9]{4}\.[A-Za-z0-9]{5}@[A-Za-z]{4}\.(com|my|org)
-    string email;
-    email += charGenerator(4);    
-    email += ".";
-    email += charGenerator(5);  
-    email += "@";
-    email += alphaGenerator(4);
-    email += ".";
-    email += domainGenerator();
-    cout << email << endl;
+        for (int i = 0; i < 100; i++) {
+        cout << charGenerator(4) + "." + charGenerator(5) + "@" + alphaGenerator(4) + "." + domainGenerator() << endl;
+    }
     return 0;
 }
 
@@ -42,5 +36,5 @@ string alphaGenerator(int l) {
 
 string domainGenerator() {
     string domain[] = {"com", "my", "org"};
-    return domain[rand()%2];
+    return domain[rand()%3];
 }
