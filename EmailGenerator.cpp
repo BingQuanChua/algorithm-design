@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <chrono>
 using namespace std;
 
 static char all[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -19,7 +20,7 @@ bool duplicateValidate(string str, vector<string> &vect);
 int main() {
     srand(time(NULL));
     generateEmail("setA", 100);
-    // generateEmail("setB", 100000);
+    generateEmail("setB", 100000);
     // generateEmail("setC", 500000); 
 
     return 0;
@@ -35,6 +36,7 @@ void generateEmail(string filename, int num) {
     // email format: [A-Za-z0-9]{4}\.[A-Za-z0-9]{5}@[A-Za-z]{4}\.(com|my|org)
     string email;
     int count = 1;
+    auto start = chrono::system_clock::now();
     // Generate specified number of email addresses
     while(count <= num){
         email ="";
@@ -55,11 +57,10 @@ void generateEmail(string filename, int num) {
             continue; // data not recorded
         }
     }
-
-    for(int i = 0; i < vect.size(); i++){
-        cout << vect[i] << endl;
-    }
-
+    
+    auto end = chrono::system_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Duration for generating " + filename + " " << duration.count() << "s" << endl;
     // close file
     file.close();
 
