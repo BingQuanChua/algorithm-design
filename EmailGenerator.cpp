@@ -4,25 +4,39 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
-
+#include <fstream>
 using namespace std;
 
-char all[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+static char all[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+static char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
+void generateEmail(string filename, int num);
 string charGenerator(int l);
 string alphaGenerator(int l);
 string domainGenerator();
 bool duplicateValidate(string str, vector<string> &vect);
 
 int main() {
+    srand(time(NULL));
+    generateEmail("setA", 100);
+    // generateEmail("setB", 100000);
+    // generateEmail("setC", 500000); 
+
+    return 0;
+}
+
+// generates email data, also generates a .txt file for reference
+void generateEmail(string filename, int num) {
+    ofstream file; 
+    file.open(filename + ".txt");
+
     // declare a string vector
     vector<string> vect;
-    // [A-Za-z0-9]{4}\.[A-Za-z0-9]{5}@[A-Za-z]{4}\.(com|my|org)
+    // email format: [A-Za-z0-9]{4}\.[A-Za-z0-9]{5}@[A-Za-z]{4}\.(com|my|org)
     string email;
     int count = 1;
-    // Generate 10000 email address
-    while(count <= 10000){
+    // Generate specified number of email addresses
+    while(count <= num){
         email ="";
         email += charGenerator(4);
         email += ".";
@@ -34,15 +48,21 @@ int main() {
         // if no duplicate string is found, add string to the vector
         if (duplicateValidate(email,vect)){
             vect.push_back(email);
+            file << email << endl;
             count++;
         }
-        else{}
+        else{
+            continue; // data not recorded
         }
+    }
 
     for(int i = 0; i < vect.size(); i++){
         cout << vect[i] << endl;
     }
-    return 0;
+
+    // close file
+    file.close();
+
 }
 
 string charGenerator(int l) {
