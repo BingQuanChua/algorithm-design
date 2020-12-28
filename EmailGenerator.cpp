@@ -12,17 +12,18 @@ static char all[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 static char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 void generateEmail(string filename, int num);
+bool searchDuplicate(string array[], int start, int end, string target);
+void insertSorted(string array[], int n, string key);
 string charGenerator(int l);
 string alphaGenerator(int l);
 string domainGenerator();
-bool duplicateValidate(string str, vector<string> &vect);
+// bool duplicateValidate(string str, vector<string> &vect);
 
 int main() {
     srand(time(NULL));
-    generateEmail("setA", 100);
-    generateEmail("setB", 100000);
+    generateEmail("setA", 10);
+    // generateEmail("setB", 100000);
     // generateEmail("setC", 500000); 
-
     return 0;
 }
 
@@ -31,8 +32,8 @@ void generateEmail(string filename, int num) {
     ofstream file; 
     file.open(filename + ".txt");
 
-    // declare a string vector
-    vector<string> vect;
+    // array of string
+    string emailSet[num] = "0";
     // email format: [A-Za-z0-9]{4}\.[A-Za-z0-9]{5}@[A-Za-z]{4}\.(com|my|org)
     string email;
     int count = 1;
@@ -47,15 +48,21 @@ void generateEmail(string filename, int num) {
         email += alphaGenerator(4);
         email += ".";
         email += domainGenerator();
-        // if no duplicate string is found, add string to the vector
-        if (duplicateValidate(email,vect)){
-            vect.push_back(email);
-            file << email << endl;
+        cout << email << endl;
+        // if no duplicate string is found, add string to the array
+        if (!searchDuplicate(emailSet, 0, count-1, email)){ // check duplicates
+            cout << "no duplicate.." << endl;
+            insertSorted(emailSet, count-1, email);
+            cout << "email inserted" << endl;
             count++;
         }
-        else{
-            continue; // data not recorded
+        else {
+            cout << "duplicated" << endl;
         }
+    }
+
+    for (string &email : emailSet) {
+        file << email << endl;
     }
     
     auto end = chrono::system_clock::now();
@@ -64,6 +71,38 @@ void generateEmail(string filename, int num) {
     // close file
     file.close();
 
+}
+
+// search for duplicates
+// modified binary search for strings
+bool searchDuplicate(string array[], int start, int end, string target) {
+    if (end == 0) {
+        return false; // empty array
+    }
+    while (start <= end) {
+        int middle = start+(end-1)/2;
+
+        if (target.compare(array[middle]) == 0) {
+            return true; // string is found, duplicate exists
+        }
+
+        if (target.compare(array[middle]) > 0)  {
+            start = middle + 1;
+        }
+        else {
+            end = middle - 1;
+        }
+    }
+    return false; // string not found, duplicate does not exists
+}
+
+// insert into sorted array
+void insertSorted(string array[], int n, string key) {
+    int i;
+    for (i = n-1; i >= 0 && key.compare(array[i]) < 0; i--) {
+        array[i+1] = array[i];
+    }
+    array[i+1] = key;
 }
 
 string charGenerator(int l) {
@@ -87,6 +126,7 @@ string domainGenerator() {
     return domain[rand()%3];
 }
 
+/*
 bool duplicateValidate(string str, vector<string> &vect){
     // return false if duplicate string is found
     if(find(vect.begin(), vect.end(), str) != vect.end())
@@ -94,3 +134,4 @@ bool duplicateValidate(string str, vector<string> &vect){
     else
         return true;
 }
+*/
