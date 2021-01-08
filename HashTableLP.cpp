@@ -6,8 +6,6 @@
 #include "LinkedList.cpp"
 
 template <typename T>
-
-
 class HashTableLP
 {
     vector<LinkedList<T>> hashtable;
@@ -48,12 +46,11 @@ class HashTableLP
         while(hashtable[index].find(email) == false && hashtable[index].isEmpty())
         {
             index = index + x;
-            x++;
         }
         if (hashtable[index].find(email) == true)
-            cout << email << " can be found " << endl;
+            cout << email << " can be found in index " << index <<endl;
         else
-            cout << email << " cannot be found " << endl;
+            cout << email << " cannot be found" <<endl;
     }
 
     friend ostream& operator<< (ostream& os, HashTableLP<T>& ht)

@@ -40,7 +40,7 @@ class HashTableChaining
     {
         int index = hashfunction(email);
         if (hashtable[index].find(email) == true)
-            cout << email << " can be found" << endl;
+            cout << email << " can be found in index " << index << endl;
         else
             cout << email << " cannot be found" << endl;
     }
