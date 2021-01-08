@@ -108,12 +108,12 @@ bool getEmail(string fileName, vector<string> &vect)
     return true;
 }
 
-void priorityQueue(vector<string> &vect){
+void priorityQueue(vector<string> &vect,bool show){
     int n = vect.size();
     int partOfData = vect.size()*0.10;
     PriorityQueue<string> pq;
     // Print the vector contents
-    if(n <= 100){
+    if(show == true){
         cout << "Below are the email addresses in this dataset:" << endl;
         for (int i = 0; i < n; i++){
             cout<<vect[i]<<endl;
@@ -121,7 +121,7 @@ void priorityQueue(vector<string> &vect){
     }
     //take the start time to insert all data into the priority queue
     auto start_Enqueue = chrono::system_clock::now();
-    if(n <= 100){
+    if(show == true){
         cout << "\nEnqueue\t\t\t: PriorityQueue\n";
         for (int i = 0; i < n; i++) {
             cout << vect[i] << "\t: ";
@@ -139,7 +139,7 @@ void priorityQueue(vector<string> &vect){
 
     //take the start time to dequeue 10% of the data
     auto start_Dequeue = chrono::system_clock::now();
-    if(n <= 100){
+    if(show == true){
         cout << "\nDequeue\t\t\t: PriorityQueue\n";
         for (int i = 0; i < partOfData; i++) {
             cout << pq.dequeue() << "\t: ";
@@ -158,7 +158,7 @@ void priorityQueue(vector<string> &vect){
     chrono::duration<double> duration_Enqueue = end_Enqueue - start_Enqueue;
     chrono::duration<double> duration_Dequeue = end_Dequeue - start_Dequeue;
     cout << "Duration to insert all data into the priority queue: " << duration_Enqueue.count() << "s" << endl;
-    cout << "Duration to dequeue 10% of the data: " << duration_Dequeue.count() << "s" << endl;
+    cout << "Duration to dequeue 10% of the data: " << duration_Dequeue.count() << "s\n" << endl;
 
 }
 
@@ -168,6 +168,8 @@ int main()
     vector<string> vectB;
     vector<string> vectC;
     int choice = 0;
+    int choice_display = 0;
+    bool show = false;
     bool exit = false;
     bool result_1 = getEmail("C:\\Users\\Ivan\\Desktop\\Datasets\\Data Set A.txt", vectA);
     bool result_2 = getEmail("C:\\Users\\Ivan\\Desktop\\Datasets\\Data Set B.txt", vectB);
@@ -186,25 +188,46 @@ int main()
     switch (choice)
     {
         case 1:
-            if(result_1)
+            if(result_1){
                 //Dataset A
-                priorityQueue(vectA);
+                do{
+                cout << "Do you want to show the output?\n1.Yes\n2.No\nEnter your choice: ";
+                cin >> choice_display;
+                if(choice_display == 1){
+                    show = true;
+                    priorityQueue(vectA,show);
+                }
+                else if (choice_display == 2){
+                    show = false;
+                    priorityQueue(vectA,show);
+                }
+                else{
+                    cout << "Error! Invalid input...Please enter choice 1 or 2\n\n";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+                }while(choice_display < 1 || choice_display > 2);
             break;
+            }
         case 2:
-            if(result_2)
+            if(result_2){
                 //Dataset B
-                priorityQueue(vectB);
+                show = false;
+                priorityQueue(vectB,show);
             break;
+            }
         case 3:
-            if(result_3)
+            if(result_3){
                 //Dataset C
-                priorityQueue(vectC);
+                show = false;
+                priorityQueue(vectC,show);
             break;
+            }
         case 4:
             exit = true;
             break;
         default:
-            cout<<"Error! Invalid input...Please enter choice from 0 - 4"<<endl;
+            cout<<"Error! Invalid input...Please enter choice from 1 - 4"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;

@@ -19,17 +19,52 @@ bool duplicateValidate(string &str, vector<string> &vect);
 
 int main() {
     srand(time(NULL));
-    generateEmail("Data Set A", 100);
-    // generateEmail("Data Set B", 100000);
-    // generateEmail("Data Set C", 500000); 
+    bool exit = false;
+    int choice = 0;
+
+    do{
+    cout << "****************" << endl;
+    cout << "Data Generation" << endl;
+    cout << "****************" << endl;
+    cout << "Please select one of the datasets below:\n1.Dataset A(100 items)\n2.Dataset B(100,000 items)\n3.Dataset C(500,000 items)\n4.Exit" << endl;
+    cout << "Enter your choice: ";
+    // Prompt user to enter their choice
+    cin >> choice;
+    cout << endl;
+
+    switch (choice)
+    {
+        case 1:
+                //Dataset A
+                generateEmail("Data Set A", 100);
+            break;
+        case 2:
+                //Dataset B
+                generateEmail("Data Set B", 100000);
+            break;
+        case 3:
+                //Dataset C
+                generateEmail("Data Set C", 500000);
+            break;
+        case 4:
+            exit = true;
+            break;
+        default:
+            cout<<"Error! Invalid input...Please enter choice from 1 - 4"<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            break;
+    }
+    cout << endl;
+    } while ( !exit );
 
     return 0;
 }
 
 // generates email data, also generates a .txt file for reference
 void generateEmail(string filename, int num) {
-    ofstream file; 
-    file.open("datasets/" + filename + ".txt");
+    ofstream file;
+    file.open(filename + ".txt");
 
     // declare a string vector
     vector<string> vect;
@@ -60,10 +95,14 @@ void generateEmail(string filename, int num) {
             continue; // data not recorded
         }
     }
-    
+
     auto end = chrono::system_clock::now();
     chrono::duration<double> duration = end - start;
-    cout << "Duration for generating " + filename + " " << duration.count() << "s" << endl;
+
+    for(int i = 0; i < vect.size();i++){
+        cout << vect[i] << endl;
+    }
+    cout << "\nDuration for generating " + filename + " " << duration.count() << "s" << endl;
     // close file
     file.close();
 
