@@ -30,40 +30,6 @@ class bst {
         return n;
     }
 
-    node * deleteItem(node *n, string &s) {
-        if (n == NULL) {
-            return n;
-        }
-        if (s.compare(n->d) < 0) {
-            n->left = deleteItem(n->left, s);
-        }
-        else {
-            if (s.compare(n->d) > 0) {
-                n->right = deleteItem(n->right, s);
-            }
-            else {
-                if (n->left == NULL && n->right == NULL) { // no child
-                    n = NULL;
-                }
-                else {
-                    if (n->left == NULL || n->right == NULL) { // one child
-                        if (n->right != NULL) {
-                            n = n->right;
-                        }
-                        else {
-                            n = n->left;
-                        }
-                    }
-                    else { // two child nodes
-                        node *temp = getSuccessor(n->left);
-                        n->d = temp->d;
-                        n->left = deleteItem(n->left, temp->d);
-                    }
-                }
-            }
-        }
-    }
-
     node * getSuccessor(node *n) {
         if (n->right == NULL) {
             return n;
@@ -73,13 +39,13 @@ class bst {
         }
     }
 
-    node * searchItem(node *n, string &s) {
+    bool searchItem(node *n, string &s) const {
         if (n == NULL) {
-            return NULL; // not found
+            return false; // not found
         }
         else {
             if (s.compare(n->d) == 0) {
-                return n;
+                return true;
             }
             else {
                 if (s.compare(n->d) < 0) {
@@ -109,7 +75,7 @@ class bst {
         return right_h - left_h;
     }
     
-    node *balance(node *n) {
+    node * balance(node *n) {
         int bF = getBalanceFactor(n);
         if (bF < -1) {
             if (getBalanceFactor(n->left) < 0) {
@@ -156,15 +122,6 @@ class bst {
         node *temp = n->right;
         n->right = rightRotate(temp);
         return leftRotate(n);
-    }
-
-    void preOrder(node *n) {
-        cout << "hi" << endl;
-        if (n != NULL) {
-            cout << n->d << endl; // visit
-            preOrder(n->left);
-            preOrder(n->right);
-        }
     }
 
     void show(node *n, int lvl)

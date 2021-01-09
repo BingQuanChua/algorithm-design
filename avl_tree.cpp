@@ -97,8 +97,7 @@ void searchEmailAddresses(string &filename, bst tree) {
 
     auto start = chrono::system_clock::now();
     while(getline(file, email)) {
-        node *temp = tree.searchItem(tree.root, email);
-        if(temp != NULL) {
+        if(tree.searchItem(tree.root, email)) {
             cout << email << "\tcan be found!" << endl;
         }
         else {
