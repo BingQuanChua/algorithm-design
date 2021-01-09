@@ -6,7 +6,7 @@ using namespace std;
 
 template <typename T>
 class PriorityQueue {
-    vector<T> vect;
+    vector<T> arr;
     //return the index of parent
     int parentIndex(int index){
         return (index-1)/2;
@@ -22,22 +22,22 @@ class PriorityQueue {
 
     public:
     void enqueue(T element){
-        vect.push_back(element);
-        heap_Enqueue(vect.size()-1);
+        arr.push_back(element);
+        heap_Enqueue(arr.size()-1);
     }
 
     T dequeue(){
-        T dequeued_element = vect[0];
-        vect[0] = vect[vect.size()-1];
-        vect.pop_back();
+        T dequeued_element = arr[0];
+        arr[0] = arr[arr.size()-1];
+        arr.pop_back();
         heap_Dequeue(0);
         return dequeued_element;
     }
 
     void heap_Enqueue(int index){
         int parent_index = parentIndex(index);
-        if (index > 0 && vect[parent_index] < vect[index]){
-            swap(vect[index],vect[parent_index]);
+        if (index > 0 && arr[parent_index] < arr[index]){
+            swap(arr[index],arr[parent_index]);
             heap_Enqueue(parent_index);
         }
     }
@@ -47,20 +47,20 @@ class PriorityQueue {
         int rightChild_index = rightChildIndex(index);
         int maxIndex;
         //if left and right nodes are not empty
-        if (rightChild_index < vect.size()){
-            if(vect[leftChild_index] > vect[rightChild_index]){
+        if (rightChild_index < arr.size()){
+            if(arr[leftChild_index] > arr[rightChild_index]){
                 maxIndex = leftChild_index;
             }
             else{
                 maxIndex = rightChild_index;
             }
-            if(vect[index] > vect[maxIndex]){
+            if(arr[index] > arr[maxIndex]){
                 maxIndex = index;
             }
         }
         //if left node not empty
-        else if(leftChild_index < vect.size()){
-            if (vect[leftChild_index] > vect[index]){
+        else if(leftChild_index < arr.size()){
+            if (arr[leftChild_index] > arr[index]){
                 maxIndex = leftChild_index;
             }
             else{
@@ -73,14 +73,14 @@ class PriorityQueue {
         }
 
         if (maxIndex != index) {
-          swap (vect[index], vect[maxIndex]);
+          swap (arr[index], arr[maxIndex]);
           heap_Dequeue(maxIndex);
         }
     }
 
     void show() {
-        for (int i = 0; i < vect.size(); i++)
-          cout << vect[i] << " ";
+        for (int i = 0; i < arr.size(); i++)
+          cout << arr[i] << " ";
         cout << endl;
     }
 };
@@ -171,9 +171,9 @@ int main()
     int choice_display = 0;
     bool show = false;
     bool exit = false;
-    bool result_1 = getEmail("C:\\Users\\Ivan\\Desktop\\Datasets\\Data Set A.txt", vectA);
-    bool result_2 = getEmail("C:\\Users\\Ivan\\Desktop\\Datasets\\Data Set B.txt", vectB);
-    bool result_3 = getEmail("C:\\Users\\Ivan\\Desktop\\Datasets\\Data Set C.txt", vectC);
+    bool result_1 = getEmail("Datasets/Data Set A.txt", vectA);
+    bool result_2 = getEmail("Datasets/Data Set B.txt", vectB);
+    bool result_3 = getEmail("Datasets/Data Set C.txt", vectC);
 
     do{
     cout << "***************************************" << endl;
