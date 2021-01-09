@@ -9,7 +9,6 @@
 using namespace std;
 
 static char all[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-static char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 void generateEmail(string filename, int num);
 string charGenerator(int l);
@@ -119,7 +118,7 @@ string charGenerator(int l) {
 string alphaGenerator(int l) {
     string ans;
     for (int i = 0; i < l; i++) {
-        ans += alphabet[rand()%52];
+        ans += all[rand()%52];
     }
     return ans;
 }
