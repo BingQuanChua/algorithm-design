@@ -10,7 +10,7 @@ class HashTableLP
 {
     vector<LinkedList<T>> hashtable;
 
-    int hashfunction (string email)
+    int hashFunction (string email)
     {
         int i = 0;
         for(int j=0; email[j] ;j++)
@@ -31,7 +31,7 @@ class HashTableLP
 
     void insertEmail (T newEmail)
     {
-        int index = hashfunction(newEmail);
+        int index = hashFunction(newEmail);
         while(hashtable[index].isEmpty())
         {
             index = index + 1;
@@ -39,18 +39,17 @@ class HashTableLP
         hashtable[index].insert(newEmail);
     }
 
-    void searchEmail (T email)
+    void searchEmail (T newEmail)
     {
-        int index = hashfunction(email);
-        int x = 1;
-        while(hashtable[index].find(email) == false && hashtable[index].isEmpty())
+        int index = hashFunction(newEmail);
+        while(hashtable[index].find(newEmail) == false && hashtable[index].isEmpty())
         {
-            index = index + x;
+            index = index + 1;
         }
-        if (hashtable[index].find(email) == true)
-            cout << email << " can be found in index " << index <<endl;
+        if (hashtable[index].find(newEmail) == true)
+            cout << newEmail << " can be found in index " << index <<endl;
         else
-            cout << email << " cannot be found" <<endl;
+            cout << newEmail << " cannot be found" <<endl;
     }
 
     friend ostream& operator<< (ostream& os, HashTableLP<T>& ht)

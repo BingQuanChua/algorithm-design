@@ -36,13 +36,13 @@ class HashTableChaining
         hashtable[index].insert(newEmail);
     }
 
-    void searchEmail (T email)
+    void searchEmail (T newEmail)
     {
-        int index = hashfunction(email);
-        if (hashtable[index].find(email) == true)
-            cout << email << " can be found in index " << index << endl;
+        int index = hashfunction(newEmail);
+        if (hashtable[index].find(newEmail) == true)
+            cout << newEmail << " can be found in index " << index << endl;
         else
-            cout << email << " cannot be found" << endl;
+            cout << newEmail << " cannot be found" << endl;
     }
 
     friend ostream& operator<< (ostream& os, HashTableChaining<T>& ht)
