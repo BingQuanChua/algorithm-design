@@ -11,7 +11,7 @@ class HashTableChaining
 {
     vector<LinkedList<T>> hashtable;
 
-    int hashfunction (string email)
+    int hashFunction (string email)
     {
         int i = 0;
         for(int j=0; email[j] ;j++)
@@ -32,13 +32,13 @@ class HashTableChaining
 
     void insertEmail (T newEmail)
     {
-        int index = hashfunction(newEmail);
+        int index = hashFunction(newEmail);
         hashtable[index].insert(newEmail);
     }
 
     void searchEmail (T newEmail)
     {
-        int index = hashfunction(newEmail);
+        int index = hashFunction(newEmail);
         if (hashtable[index].find(newEmail) == true)
             cout << newEmail << " can be found in index " << index << endl;
         else
