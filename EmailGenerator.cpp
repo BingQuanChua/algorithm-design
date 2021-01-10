@@ -25,7 +25,7 @@ int main() {
     cout << "****************" << endl;
     cout << "Data Generation" << endl;
     cout << "****************" << endl;
-    cout << "Please select one of the datasets below:\n1.Dataset A(100 items)\n2.Dataset B(100,000 items)\n3.Dataset C(500,000 items)\n4.Exit" << endl;
+    cout << "Please select one of the datasets below to generate:\n1.Dataset A(100 items)\n2.Dataset B(100,000 items)\n3.Dataset C(500,000 items)\n4.Exit" << endl;
     cout << "Enter your choice: ";
     // Prompt user to enter their choice
     cin >> choice;
