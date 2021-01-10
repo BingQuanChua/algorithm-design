@@ -1,7 +1,9 @@
 #include <iostream>
 #include <chrono>
 #include <fstream>
-#include "AVL_BST.cpp"
+#include "avl.cpp"
+#include <vector>
+#include <algorithm> 
 using namespace std;
 
 bst insertEmailToTree(string &filename, bst tree);
@@ -79,9 +81,20 @@ bst insertEmailToTree(string &filename, bst tree) {
     string email;
     ifstream file("datasets/" + filename + ".txt");
     
-    auto start = chrono::system_clock::now();
+    //
+    vector<string> vec;
     while(getline(file, email)) {
-        tree.root = tree.insert(tree.root, email);
+        vec.push_back(email);
+    }
+    sort(vec.begin(), vec.end());
+    int size = vec.size();
+
+    auto start = chrono::system_clock::now();
+    tree.root = tree.insert(tree.root, vec.at(size/2));
+    tree.root = tree.insert(tree.root, vec.at(size/2-1));
+    for(int i = 0; i < size/2-1; i++) {
+        tree.root = tree.insert(tree.root, vec.at(i));
+        tree.root = tree.insert(tree.root, vec.at(size-1-i));
     }
     auto end = chrono::system_clock::now();
     chrono::duration<double> duration = end - start;

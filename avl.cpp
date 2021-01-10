@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "Node.cpp"
+#include "node.cpp"
 
 using namespace std;
 
@@ -48,7 +48,7 @@ class bst {
                 return true;
             }
             else {
-                if (s.compare(n->d) < 0) {
+                if (s.compare(n->d) < 0){
                     return searchItem(n->left, s);
                 }
                 else {
