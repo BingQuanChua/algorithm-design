@@ -100,27 +100,27 @@ int main()
 
       if(insertChoice == 1)
       {
-          insertEmail = "Data Set A.txt";
+          insertEmail = "datasets/Data Set A.txt";
           if(searchChoice == 1)
-            searchEmail = "Data Set A(Found).txt";
+            searchEmail = "Search Datasets/Data Set A(Found).txt";
           else
-            searchEmail = "Data Set A(Cannot Found).txt";
+            searchEmail = "Search Datasets/Data Set A(Cannot Found).txt";
       }
       else if (insertChoice == 2)
       {
-          insertEmail = "Data Set B.txt";
+          insertEmail = "datasets/Data Set B.txt";
           if(searchChoice == 1)
-            searchEmail = "Data Set B(Found).txt";
+            searchEmail = "Search Datasets/Data Set B(Found).txt";
           else
-            searchEmail = "Data Set B(Cannot Found).txt";
+            searchEmail = "Search Datasets/Data Set B(Cannot Found).txt";
       }
       else
       {
-          insertEmail = "Data Set C.txt";
+          insertEmail = "datasets/Data Set C.txt";
           if(searchChoice == 1)
-            searchEmail = "Data Set C(Found).txt";
+            searchEmail = "Search Datasets/Data Set C(Found).txt";
           else
-            searchEmail = "Data Set C(Cannot Found).txt";
+            searchEmail = "Search Datasets/Data Set C(Cannot Found).txt";
       }
 
 
