@@ -5,13 +5,12 @@
 using namespace std;
 
 class bst {
-    
+
     public:
-    struct node *root; 
+    struct node *root;
 
     node * insert(node *n, string &s) {
         if (n == NULL) {
-            // assign node as root 
             n = new node();
             n->d = s;
             n->left = NULL;
@@ -74,7 +73,7 @@ class bst {
         int right_h = getNodeHeight(n->right);
         return right_h - left_h;
     }
-    
+
     node * balance(node *n) {
         int bF = getBalanceFactor(n);
         if (bF < -1) {
@@ -145,6 +144,5 @@ class bst {
     bst() {
         root = NULL;
     }
-};   
+};
 
-    

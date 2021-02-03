@@ -5,3 +5,5 @@ setB.txt
 setC.txt
 .vscode/
 AVL_BinarySearchTree.exe
+*.exe
+avl_tree.exe
