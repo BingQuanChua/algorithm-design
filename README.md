@@ -1,2 +1,2 @@
 # AlgorithmDesign
-Email generator algorithm design and analysis
+Algorithm Design and Analysis Assignment
