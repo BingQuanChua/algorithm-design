@@ -8,40 +8,45 @@
 #include "linkedlist.cpp"
 using namespace std;
 
-static char characters[] = "ABCDEFGHIJ";
-planet planets[10];          // array of planets
-double matrix[10][10];       // adjacency matrix of planets
-LinkedList<int> list[10];    // adjacency list of planets
+const int N = 10;
 
-void getPlanetDetails();
-void initAdjancencyMatrix();
-void addEdge(int a, int b, double value);
-void printAdjacencyMatrix();
-void calculatePlanetDistance();
-void generateDistance();
-void initAdjacencyList();
-void printAdjacencyList();
+void getPlanetDetails(Planet *planets);
+void initAdjancencyMatrix(double matrix[][N]);
+void addEdge(double matrix[][N], int a, int b, double value);
+void printAdjacencyMatrix(double matrix[][N]);
+void calculatePlanetDistance(Planet *planets, double matrix[][N]);
+void generateDistance(double matrix[][N]);
+void initAdjacencyList(LinkedList<int> *list, double matrix[][N]);
+void printAdjacencyList(LinkedList<int> *list);
  
 int main() {
 
-    getPlanetDetails();
-    initAdjancencyMatrix();
-    calculatePlanetDistance();
-    printAdjacencyMatrix();
-    generateDistance();
+    Planet planets[N];          // array of planets
+    double matrix[N][N] = {0};  // adjacency matrix of planets
+    LinkedList<int> list[N];    // adjacency list of planets
 
-    initAdjacencyList();
-    printAdjacencyList();
+    // read planet details from file
+    getPlanetDetails(planets);
+
+    // initialize the adjacency matrix, calculate distance
+    initAdjancencyMatrix(matrix);
+    calculatePlanetDistance(planets, matrix);
+    printAdjacencyMatrix(matrix);
+    generateDistance(matrix);
+
+    // initialize the adjacency list from the adjacency matrix
+    initAdjacencyList(list, matrix);
+    printAdjacencyList(list);
     return 0;
 }
 
 // read planet details from the generated data
-void getPlanetDetails() {
+void getPlanetDetails(Planet *planets) {
 
     string details;
     ifstream file("generated-data/A2planets.txt");
     for (int i = 0; i < 10; i++) {
-        planet p;
+        Planet p;
         file >> details;
         p.name = details;
         file >> details;
@@ -62,38 +67,40 @@ void getPlanetDetails() {
 }
 
 // initialize the map
-void initAdjancencyMatrix() {
+void initAdjancencyMatrix(double matrix[][N]) {
 
-    addEdge(0, 3, 1); // AD
-    addEdge(0, 5, 1); // AF
-    addEdge(0, 7, 1); // AH
-    addEdge(0, 9, 1); // AJ
-    addEdge(3, 9, 1); // DJ
-    addEdge(7, 9, 1); // HJ
-    addEdge(5, 7, 1); // FH
-    addEdge(1, 3, 1); // BD
-    addEdge(6, 9, 1); // GJ
-    addEdge(7, 8, 1); // HI
-    addEdge(2, 5, 1); // CF
-    addEdge(1, 6, 1); // BG
-    addEdge(6, 8, 1); // GI
-    addEdge(2, 8, 1); // CI
-    addEdge(1, 4, 1); // BE
-    addEdge(4, 6, 1); // EG
-    addEdge(4, 8, 1); // EI
-    addEdge(2, 4, 1); // CE
+    addEdge(matrix, 0, 3, 1); // AD
+    addEdge(matrix, 0, 5, 1); // AF
+    addEdge(matrix, 0, 7, 1); // AH
+    addEdge(matrix, 0, 9, 1); // AJ
+    addEdge(matrix, 3, 9, 1); // DJ
+    addEdge(matrix, 7, 9, 1); // HJ
+    addEdge(matrix, 5, 7, 1); // FH
+    addEdge(matrix, 1, 3, 1); // BD
+    addEdge(matrix, 6, 9, 1); // GJ
+    addEdge(matrix, 7, 8, 1); // HI
+    addEdge(matrix, 2, 5, 1); // CF
+    addEdge(matrix, 1, 6, 1); // BG
+    addEdge(matrix, 6, 8, 1); // GI
+    addEdge(matrix, 2, 8, 1); // CI
+    addEdge(matrix, 1, 4, 1); // BE
+    addEdge(matrix, 4, 6, 1); // EG
+    addEdge(matrix, 4, 8, 1); // EI
+    addEdge(matrix, 2, 4, 1); // CE
 
-    printAdjacencyMatrix();
+    printAdjacencyMatrix(matrix);
 }
 
 // (for adjacency matrix) adds a new edge in the map
-void addEdge(int a, int b, double value) {
+void addEdge(double matrix[][N], int a, int b, double value) {
     matrix[a][b] = value;
     matrix[b][a] = value;
 }
 
 // print adjacency matrix
-void printAdjacencyMatrix() {
+void printAdjacencyMatrix(double matrix[][N]) {
+    char characters[] = "ABCDEFGHIJ";
+
     cout << " ";
     for (int i = 0; i < 10; i++) {
         cout << " " << setw(9) << characters[i];
@@ -110,7 +117,7 @@ void printAdjacencyMatrix() {
 }
 
 // calculate planet distance from the initialized matrix
-void calculatePlanetDistance() {
+void calculatePlanetDistance(Planet *planets, double matrix[][N]) {
     for (int j = 0; j < 10; j++) {
         for (int i = j; i < 10; i++) {
             if (matrix[j][i] > 0) {
@@ -119,14 +126,14 @@ void calculatePlanetDistance() {
                 + pow((planets[j].y - planets[i].y),2) 
                 + pow((planets[j].z - planets[i].z),2));
 
-                addEdge(i, j, distance);
+                addEdge(matrix, i, j, distance);
             }
         }
     }
 }
 
 // generate planet distance to a .txt file
-void generateDistance() {
+void generateDistance(double matrix[][N]) {
     ofstream file;
     file.open("generated-data/planet-distances.txt");
     
@@ -141,19 +148,23 @@ void generateDistance() {
     file.close();
 }
 
-void initAdjacencyList() {
+// initialize adjacency list
+void initAdjacencyList(LinkedList<int> *list, double matrix[][N]) {
     for (int j = 0; j < 10; j++) {
         for (int i = 0; i < 10; i++) {
             if (matrix[j][i] > 0) {
                 // there's an edge
-                list[j].insert(i, matrix[j][i]);
+                double temp = matrix[j][i];
+                list[j].insert(i, temp);
             }
         }
     }
 }
 
 // print adjacency list
-void printAdjacencyList() {
+void printAdjacencyList(LinkedList<int> *list) {
+    char characters[] = "ABCDEFGHIJ";
+
     for (int i = 0; i < 10; i++) {
         cout << characters[i] << "-   ";
         cout << list[i] << endl;

@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-struct planet
+struct Planet
 {
     string name;
     int x;
