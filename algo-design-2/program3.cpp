@@ -5,7 +5,7 @@
 #include <cmath>
 using namespace std;
 
-struct Planet
+struct Planet           // Struct for storing planet info
 {
     string name;
     int x;
@@ -15,13 +15,13 @@ struct Planet
     int profit;
 };
 
-struct KruskalPlanet
+struct KruskalPlanet        //Struct to store edge of the planet
 {
     int planet1;
     int planet2;
 };
 
-class PlanetMap
+class PlanetMap             //Class to store the planet map
 {
 	public:
         int node, edge;
@@ -33,7 +33,7 @@ class PlanetMap
         KruskalPlanet* kruskal();
 };
 
-struct DisjointSets
+struct DisjointSets         //Struct to check the map whether has a cycle
 {
 	int *parent, *rnk;
 	int node;
@@ -83,7 +83,7 @@ void PlanetMap::addEdge(int planetOne, int planetTwo, double weight)
     edgePair.push_back({weight, {planetOne, planetTwo}});
 }
 
-KruskalPlanet* PlanetMap::kruskal()
+KruskalPlanet* PlanetMap::kruskal()         //Function to perform kruskal's algorithm
 {
 	sort(edgePair.begin(), edgePair.end());
 	static KruskalPlanet kp[10];
@@ -107,7 +107,6 @@ KruskalPlanet* PlanetMap::kruskal()
             kp[i].planet1 = pOne;
             kp[i].planet2 = pTwo;
             cout << char(65+pOne) << " - " << char(65+pTwo) << "\t Weight = " << eWeight <<endl;
-            //cout << pOne << " - " << pTwo << "\t " << i << endl;
             ds.merge(set_pOne, set_pTwo);
             i++;
         }
@@ -116,7 +115,7 @@ KruskalPlanet* PlanetMap::kruskal()
 	return kp;
 }
 
-double getWeight(Planet one, Planet two)
+double getWeight(Planet one, Planet two)    //Calculate the weight of the edges
 {
     double weight;
 
@@ -125,7 +124,7 @@ double getWeight(Planet one, Planet two)
     return weight;
 }
 
-void initmap(char g[7][13])
+void initmap(char g[7][13])                 //Initialize the graph map
 {
     for (int i=0; i<7; i++)
     {
@@ -147,7 +146,7 @@ void initmap(char g[7][13])
     g[2][3] = 'J';
 }
 
-void displayGraph(char g[7][13])
+void displayGraph(char g[7][13])        //Display the graph
 {
     cout << endl;
     for (int i=0; i<7; i++)
@@ -159,7 +158,7 @@ void displayGraph(char g[7][13])
     }
 }
 
-void connect(char g[7][13], int a, int b)
+void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
 {
     switch (a) {
     case 0:     // A
@@ -320,7 +319,7 @@ int main()
 
     planetFile.open("generated-data/A2planets.txt", ios::in);
 
-    if(planetFile)
+    if(planetFile)                      //Load data from the file into an array of Planet class
     {
         for(int i=0; i<10; i++)
         {
