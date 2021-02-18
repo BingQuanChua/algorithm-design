@@ -24,61 +24,32 @@ struct KruskalPlanet        //Struct to store edge of the planet
 class PlanetMap             //Class to store the planet map
 {
 	public:
-        int node, edge;
+        PlanetMap(int node);
+        void addEdge(int planetOne, int planetTwo, double weight);
+        KruskalPlanet* kruskal();
+
+    private:
+        int *parent;
+        int node;
         typedef pair<int, int> planetName;
         vector< pair<double, planetName> > edgePair;
 
-        PlanetMap(int node, int edge);
-        void addEdge(int planetOne, int planetTwo, double weight);
-        KruskalPlanet* kruskal();
+        int findPlanet (int planet);
+        void mergeSet(int set1, int set2);
 };
 
-struct DisjointSets         //Struct to check the map whether has a cycle
-{
-	int *parent, *rnk;
-	int node;
-
-	DisjointSets(int node)
-	{
-		this->node = node;
-		parent = new int[node+1];
-		rnk = new int[node+1];
-
-		for (int i = 0; i <= node; i++)
-		{
-			rnk[i] = 0;
-			parent[i] = i;
-		}
-	}
-
-	int find(int planet)
-	{
-		if (planet != parent[planet])
-			parent[planet] = find(parent[planet]);
-		return parent[planet];
-	}
-
-	void merge(int set1, int set2)
-	{
-		set1 = find(set1), set2 = find(set2);
-
-		if (rnk[set1] > rnk[set2])
-			parent[set2] = set1;
-		else
-			parent[set1] = set2;
-
-		if (rnk[set1] == rnk[set2])
-			rnk[set2]++;
-	}
-};
-
-PlanetMap:: PlanetMap(int node, int edge)
+PlanetMap:: PlanetMap(int node)
 {
     this->node = node;
-    this->edge = edge;
+
+    parent = new int[node+1];
+    for (int i = 0; i <= node; i++)
+    {
+        parent[i] = i;
+    }
 }
 
-void PlanetMap::addEdge(int planetOne, int planetTwo, double weight)
+void PlanetMap::addEdge(int planetOne, int planetTwo, double weight)  //Add planet edge into a vector
 {
     edgePair.push_back({weight, {planetOne, planetTwo}});
 }
@@ -89,8 +60,6 @@ KruskalPlanet* PlanetMap::kruskal()         //Function to perform kruskal's algo
 	static KruskalPlanet kp[10];
 	int i = 0;
 
-	DisjointSets ds(node);
-
 	vector< pair<double, planetName> >::iterator a;
 
 	for (a=edgePair.begin(); a!=edgePair.end(); a++)
@@ -99,20 +68,32 @@ KruskalPlanet* PlanetMap::kruskal()         //Function to perform kruskal's algo
         int pOne = a->second.first;
         int pTwo = a->second.second;
 
-        int set_pOne = ds.find(pOne);
-        int set_pTwo = ds.find(pTwo);
+        int set_pOne = findPlanet(pOne);
+        int set_pTwo = findPlanet(pTwo);
 
         if (set_pOne != set_pTwo)
         {
             kp[i].planet1 = pOne;
             kp[i].planet2 = pTwo;
             cout << char(65+pOne) << " - " << char(65+pTwo) << "\t Weight = " << eWeight <<endl;
-            ds.merge(set_pOne, set_pTwo);
+            mergeSet(set_pOne, set_pTwo);
             i++;
         }
 	}
 
 	return kp;
+}
+
+int PlanetMap::findPlanet(int planet)           //Find the parent of the planet
+{
+    if (planet != parent[planet])
+        parent[planet] = findPlanet(parent[planet]);
+    return parent[planet];
+}
+
+void PlanetMap::mergeSet(int set1, int set2)    //Merge two set into one set
+{
+    parent[set1] = parent[set2];
 }
 
 double getWeight(Planet one, Planet two)    //Calculate the weight of the edges
@@ -309,7 +290,7 @@ int main()
     int tempX, tempY, tempZ, tempWeight, tempProfit;
     KruskalPlanet *kp;
     fstream planetFile;
-	PlanetMap map(10, 18);
+	PlanetMap map(10);
 
 	char graph[7][13];
 	char graphAfter[7][13];
