@@ -4,15 +4,22 @@ using namespace std;
 
 struct Planet
 {
-    string name;
+    char name;
     int x;
     int y;
     int z;
     int weight;
     int profit;
+    double value = 0;
 
     double calculateValue() 
     {
-        return profit/weight;
+        value = 1.0*profit/weight;
+        return value;
     }
 };
+
+ostream &operator<< (ostream &os, const Planet &p) {
+    os << p.name;
+    return os;
+}

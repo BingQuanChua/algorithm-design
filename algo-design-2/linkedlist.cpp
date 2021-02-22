@@ -5,17 +5,18 @@
 #include <iomanip>
 using namespace std;
 
+template <typename T>
 struct Node
 {
-    int info; // index of connected planet
-    double weight; // weight of edge in between
-    Node *next;
+    T info; // info
+    double value; // value
+    Node<T> *next;
 };
 
 template <typename T>
 class LinkedList 
 {
-    Node *start;
+    Node<T> *start;
 
 public:
     LinkedList()
@@ -23,19 +24,97 @@ public:
         start = NULL;
     }
     
-    void insert(int &element, double &weight)
+    void insert(T &element, double &value)
     {
-        Node *newNode = new Node;
+        Node<T> *newNode = new Node<T>;
         newNode->info = element;
-        newNode->weight = weight;
+        newNode->value = value;
         newNode->next = start;
         start = newNode;
     }
 
-    bool find(int &target) 
+    void splitLinkedList(Node<T> *head, Node<T> **a, Node<T> **b) {
+        Node<T> *fast;
+        Node<T> *slow;
+        slow = head;
+        fast = head->next;
+
+        while (fast != NULL) {
+            fast = fast->next;
+            if (fast != NULL) {
+                slow = slow->next;
+                fast = fast->next;
+            }
+        }
+
+        *a = head;
+        *b = slow->next;
+        slow->next = NULL;
+    }
+    
+    Node<T> * merge(Node<T> *a, Node<T> *b, int order) {
+        Node<T> *result = NULL;
+
+        if (a == NULL) {
+            return b;
+        }
+        else {
+            if (b == NULL) {
+                return a;
+            }
+        }
+
+        if (order == 0) {
+            if (a->value <= b->value) {
+                result = a;
+                result->next = merge(a->next, b, order);
+            }
+            else {
+                result = b;
+                result->next = merge(a, b->next, order);
+            }
+        }
+        else {
+            if (a->value <= b->value) {
+                result = b;
+                result->next = merge(a, b->next, order);
+            }
+            else {
+                result = a;
+                result->next = merge(a->next, b, order);
+            }
+        }
+        
+        return result;
+    }
+
+    void startMergeSort(int order=0) {
+        // order: 0 => ascending
+        // order: 1 => descending
+        mergeSort(&start, order);
+    }
+
+    void mergeSort(Node<T> **headStart, int order) {
+        Node<T> *head = *headStart;
+        Node<T> *a;
+        Node<T> *b;
+
+        if((head == NULL) || (head->next == NULL)) {
+            return;
+        }
+
+        splitLinkedList(head, &a, &b);
+        mergeSort(&a, order);
+        mergeSort(&b, order);
+
+        *headStart = merge(a, b, order);
+    }
+
+
+    bool find(T target) 
     {
         bool found = false;
-        Node *ptr = start;
+        Node<T> *ptr = start;
         while(ptr != NULL && !found) 
         {
             if(ptr->info == target)
@@ -61,15 +140,28 @@ public:
     // print single linked list when called
     friend ostream &operator<< (ostream &os, LinkedList<T> &list) 
     {
-        Node *ptr = list.start;
-        char characters[] = "ABCDEFGHIJ";
+        Node<T> *ptr = list.start;
         while(ptr != NULL) 
         {
-            os << characters[ptr->info] << ": " << setw(7) << ptr->weight << "   ";
+            os << ptr->info << ": " << setw(7) << ptr->value << " ";
             ptr = ptr->next;
+            if (ptr != NULL) {
+                os << "-> ";
+            }
         }
         return os;
     }
+
+    void printEdgesList() 
+    {   
+        cout << "HI" << endl;
+        Node<T> *ptr = start; 
+        while (ptr != NULL) { 
+            cout << ptr->value << " "; 
+            ptr = ptr->next; 
+        } 
+        cout << "ENDED" << endl;
+    } 
 };
 
 #endif
