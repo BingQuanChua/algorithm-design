@@ -179,6 +179,10 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
         }
         break;
     case 1:     // B
+        if (b == 3)     // connect to B
+        {
+            g[3][0] = '|';
+        }
         if (b == 4)     // connect to E
         {
             g[6][0] = '+';
@@ -206,12 +210,17 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
             g[6][7] = '-';
             g[5][12] = '|';
         }
+        if (b == 5)     // connect to F
+        {
+            g[3][12] = '|';
+        }
+        if (b == 8)     // connect to C
+        {
+            g[4][10] = '-';
+            g[4][11] = '-';
+        }
         break;
     case 3:     // D
-        if (b == 1)     // connect to B
-        {
-            g[3][0] = '|';
-        }
         if (b == 9)     // connect to J
         {
             g[2][1] = '-';
@@ -219,9 +228,10 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
         }
         break;
     case 5:     // F
-        if (b == 2)     // connect to C
+        if (b == 7)     // connect to H
         {
-            g[3][12] = '|';
+            g[2][10] = '-';
+            g[2][11] = '-';
         }
         break;
     case 6:     // G
@@ -242,22 +252,20 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
         }
         break;
     case 7:     // H
-        if (b == 5)     // connect to F
-        {
-            g[2][10] = '-';
-            g[2][11] = '-';
-        }
         if (b == 8)     // connect to I
         {
             g[3][9] = '|';
         }
+        if (b == 9)     // connect to H
+        {
+            g[2][4] = '-';
+            g[2][5] = '-';
+            g[2][6] = '-';
+            g[2][7] = '-';
+            g[2][8] = '-';
+        }
         break;
     case 8:     //I
-        if (b == 2)     // connect to C
-        {
-            g[4][10] = '-';
-            g[4][11] = '-';
-        }
         if (b == 4)     // connect to E
         {
             g[6][9] = '+';
@@ -271,14 +279,6 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
         {
             g[3][3] = '|';
         }
-        if (b == 7)     // connect to H
-        {
-            g[2][4] = '-';
-            g[2][5] = '-';
-            g[2][6] = '-';
-            g[2][7] = '-';
-            g[2][8] = '-';
-        }
     }
 
 }
@@ -287,9 +287,11 @@ int main()
 {
     Planet planetList[10];
     string tempName;
-    int tempX, tempY, tempZ, tempWeight, tempProfit;
+    int tempX, tempY, tempZ, tempWeight, tempProfit, edge, tempP1, tempP2;
     KruskalPlanet *kp;
+    KruskalPlanet ep[18];
     fstream planetFile;
+    fstream edgeFile;
 	PlanetMap map(10);
 
 	char graph[7][13];
@@ -299,6 +301,7 @@ int main()
 	initmap(graphAfter);
 
     planetFile.open("generated-data/A2planets.txt", ios::in);
+    edgeFile.open("generated-data/planet-edges.txt", ios::in);
 
     if(planetFile)                      //Load data from the file into an array of Planet class
     {
@@ -327,80 +330,35 @@ int main()
         cout << "File not found" << endl;
     }
 
-    cout << "Before applying Kruskal Algorithm" << endl;
-    cout << "The edges of original map: " <<endl;
+    if(edgeFile)                      //Load data from the file into an array of Planet class
+    {
+        edgeFile >> edge;
 
-    map.addEdge(0, 3, getWeight(planetList[0],planetList[3]));
-    connect(graph,0,3);     // A-D
-    cout << "A - D \t Weight = "  << getWeight(planetList[0],planetList[3]) << endl;
+        for(int i=0; i<18; i++)
+        {
+            KruskalPlanet tempEdge;
 
-    map.addEdge(0, 9, getWeight(planetList[0],planetList[9]));
-    connect(graph,0,9);
-    cout << "A - J \t Weight = "  << getWeight(planetList[0],planetList[9]) << endl;
+            edgeFile >> tempP1;
+            tempEdge.planet1 = tempP1;
 
-    map.addEdge(0, 7, getWeight(planetList[0],planetList[7]));
-    connect(graph,0,7);
-    cout << "A - H \t Weight = "  << getWeight(planetList[0],planetList[7]) << endl;
+            edgeFile >> tempP2;
+            tempEdge.planet2 = tempP2;
 
-    map.addEdge(0, 5, getWeight(planetList[0],planetList[5]));
-    connect(graph,0,5);
-    cout << "A - F \t Weight = "  << getWeight(planetList[0],planetList[5]) << endl;
+            ep[i] = tempEdge;
+        }
+        edgeFile.close();
+    }
+    else
+    {
+        cout << "File not found" << endl;
+    }
 
-    map.addEdge(3, 1, getWeight(planetList[3],planetList[1]));
-    connect(graph,3,1);
-    cout << "D - B \t Weight = "  << getWeight(planetList[3],planetList[1]) << endl;
-
-    map.addEdge(9, 6, getWeight(planetList[9],planetList[6]));
-    connect(graph,9,6);
-    cout << "J - G \t Weight = "  << getWeight(planetList[9],planetList[6]) << endl;
-
-    map.addEdge(7, 8, getWeight(planetList[7],planetList[8]));
-    connect(graph,7,8);
-    cout << "H - I \t Weight = "  << getWeight(planetList[7],planetList[8]) << endl;
-
-    map.addEdge(5, 2, getWeight(planetList[5],planetList[2]));
-    connect(graph,5,2);
-    cout << "F - C \t Weight = "  << getWeight(planetList[5],planetList[2]) << endl;
-
-    map.addEdge(1, 4, getWeight(planetList[1],planetList[4]));
-    connect(graph,1,4);
-    cout << "B - E \t Weight = "  << getWeight(planetList[1],planetList[4]) << endl;
-
-    map.addEdge(6, 4, getWeight(planetList[6],planetList[4]));
-    connect(graph,6,4);
-    cout << "G - E \t Weight = "  << getWeight(planetList[6],planetList[4]) << endl;
-
-    map.addEdge(8, 4, getWeight(planetList[8],planetList[4]));
-    connect(graph,8,4);
-    cout << "I - E \t Weight = "  << getWeight(planetList[8],planetList[4]) << endl;
-
-    map.addEdge(2, 4, getWeight(planetList[2],planetList[4]));
-    connect(graph,2,4);
-    cout << "C - E \t Weight = "  << getWeight(planetList[2],planetList[4]) << endl;
-
-    map.addEdge(3, 9, getWeight(planetList[3],planetList[9]));
-    connect(graph,3,9);
-    cout << "D - J \t Weight = "  << getWeight(planetList[3],planetList[9]) << endl;
-
-    map.addEdge(9, 7, getWeight(planetList[9],planetList[7]));
-    connect(graph,9,7);
-    cout << "J - H \t Weight = "  << getWeight(planetList[9],planetList[7]) << endl;
-
-    map.addEdge(7, 5, getWeight(planetList[7],planetList[5]));
-    connect(graph,7,5);
-    cout << "H - F \t Weight = "  << getWeight(planetList[7],planetList[5]) << endl;
-
-    map.addEdge(1, 6, getWeight(planetList[1],planetList[6]));
-    connect(graph,1,6);
-    cout << "B - G \t Weight = "  << getWeight(planetList[1],planetList[6]) << endl;
-
-    map.addEdge(6, 8, getWeight(planetList[6],planetList[8]));
-    connect(graph,6,8);
-    cout << "G - I \t Weight = "  << getWeight(planetList[6],planetList[8]) << endl;
-
-    map.addEdge(8, 2, getWeight(planetList[8],planetList[2]));
-    connect(graph,8,2);
-    cout << "I - C \t Weight = "  << getWeight(planetList[8],planetList[2]) << endl;
+    for(int i=0; i<edge; i++)
+    {
+        map.addEdge(ep[i].planet1, ep[i].planet2, getWeight(planetList[ep[i].planet1], planetList[ep[i].planet2]));
+        connect(graph, ep[i].planet1, ep[i].planet2);
+        cout << char(65+ep[i].planet1) << " - " << char(65+ep[i].planet2) << "\t Weight = " << getWeight(planetList[ep[i].planet1], planetList[ep[i].planet2]) <<endl;
+    }
 
     cout << "\n\nThe graph of the planet location: ";
     displayGraph(graph);
