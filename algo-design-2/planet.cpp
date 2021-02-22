@@ -4,13 +4,14 @@ using namespace std;
 
 struct Planet
 {
-    char name;
-    int x;
-    int y;
-    int z;
+    string name;            // planet full name: "Planet_X"
+    char planetCharacter;   // planet character: "X"
+    int x;                  // x coordinate 
+    int y;                  // y coordinate 
+    int z;                  // z coordinate 
     int weight;
     int profit;
-    double value = 0;
+    double value = 0;       // value calculated from profit/weight
 
     double calculateValue() 
     {
@@ -20,6 +21,6 @@ struct Planet
 };
 
 ostream &operator<< (ostream &os, const Planet &p) {
-    os << p.name;
+    os << p.planetCharacter;
     return os;
 }

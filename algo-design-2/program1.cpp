@@ -12,23 +12,23 @@ using namespace std;
 const int N = 10;
 char characters[] = "ABCDEFGHIJ";
 
-LinkedList<char> getPlanetDetails(Planet *planets, LinkedList<char> values);
+LinkedList<Planet> getPlanetDetails(Planet *planets, LinkedList<Planet> values);
 void initAdjancencyMatrix(double matrix[][N]);
 void addEdge(double matrix[][N], int a, int b, double value);
 void printAdjacencyMatrix(double matrix[][N]);
 LinkedList<Edge> calculatePlanetDistance(Planet *planets, double matrix[][N], LinkedList<Edge> edges);
 void generateDistance(double matrix[][N]);
-void initAdjacencyList(LinkedList<char> *list, double matrix[][N]);
-void printAdjacencyList(LinkedList<char> *list);
+void initAdjacencyList(LinkedList<Planet> *list, double matrix[][N], Planet *planets);
+void printAdjacencyList(LinkedList<Planet> *list);
 
 int main() {
 
     Planet planets[N];           // array of planets
-    double matrix[N][N] = {0};   // adjacency matrix of planets
-    LinkedList<char> list[N];    // adjacency list of planets
+    LinkedList<Planet> values;   // list of planet values
     LinkedList<Edge> edges;      // list of planet distances
-    LinkedList<char> values;   // list of planet values
-
+    double matrix[N][N] = {0};   // adjacency matrix of planets
+    LinkedList<Planet> list[N];    // adjacency list of planets
+    
     // read planet details from file
     values = getPlanetDetails(planets, values);
 
@@ -39,28 +39,28 @@ int main() {
     generateDistance(matrix);
 
     // initialize the adjacency list from the adjacency matrix
-    initAdjacencyList(list, matrix);
+    initAdjacencyList(list, matrix, planets);
     printAdjacencyList(list);
 
 
-    // does merge sort on edge
-    // ascending order of distance
+    // list of planet distances
     cout << endl << "List of Planet Distances: " << endl;
     cout << edges << endl;
 
+    // does merge sort on edge
+    // ascending order of distance
     edges.startMergeSort(0);
-
     cout << endl << "List of Planet Distances sorted ascendingly: " << endl;
     cout << edges << endl;
 
     
-    // does merge sort on value
-    // descending order of value
+    // list of planet values
     cout << endl << "List of Planet Values: " << endl;
     cout << values << endl;
 
+    // does merge sort on value
+    // descending order of value
     values.startMergeSort(1);
-
     cout << endl << "List of Planet Values sorted descendingly: " << endl;
     cout << values << endl;
 
@@ -69,14 +69,15 @@ int main() {
 }
 
 // read planet details from the generated data
-LinkedList<char> getPlanetDetails(Planet *planets, LinkedList<char> values) {
+LinkedList<Planet> getPlanetDetails(Planet *planets, LinkedList<Planet> values) {
 
     string details;
     ifstream file("generated-data/A2planets.txt");
     for (int i = 0; i < 10; i++) {
         Planet p;
         file >> details;
-        p.name = details.at(0);
+        p.name = details;
+        p.planetCharacter = details.at(7);
         file >> details;
         p.x = stoi(details);
         file >> details;
@@ -94,7 +95,7 @@ LinkedList<char> getPlanetDetails(Planet *planets, LinkedList<char> values) {
 
             // insert to planet values
             double value = p.calculateValue();
-            values.insert(characters[i], value);
+            values.insert(p, value);
         }
 
         // stores each planet into the array
@@ -161,23 +162,17 @@ LinkedList<Edge> calculatePlanetDistance(Planet *planets, double matrix[][N], Li
         for (int i = j; i < 10; i++) {
             if (matrix[j][i] > 0) {
                 // there's an edge
-                double distance = sqrt(pow((planets[j].x - planets[i].x),2) 
-                + pow((planets[j].y - planets[i].y),2) 
-                + pow((planets[j].z - planets[i].z),2));
+                // create a new edge
+                Edge e;
+                e.p1 = planets[i];
+                e.p2 = planets[j];
+
+                double distance = e.calculateDistance();
+
+                edges.insert(e, distance);
 
                 // add an edge in the matrix
                 addEdge(matrix, i, j, distance);
-
-                // add edge in the Edge array
-                Edge e;
-                e.p1 = characters[i];
-                e.p2 = characters[j];
-                e.value = distance;
-                //string edge = "";
-                //edge += characters[j];
-                //edge += characters[i];
-                //cout << edge << ": " << distance << endl;
-                edges.insert(e, distance);
             }
         }
     }
@@ -201,20 +196,21 @@ void generateDistance(double matrix[][N]) {
 }
 
 // initialize adjacency list
-void initAdjacencyList(LinkedList<char> *list, double matrix[][N]) {
+void initAdjacencyList(LinkedList<Planet> *list, double matrix[][N], Planet *planets) {
+    // generate adjacency list from the adjacency matrix
     for (int j = 0; j < 10; j++) {
         for (int i = 0; i < 10; i++) {
             if (matrix[j][i] > 0) {
                 // there's an edge
-                double temp = matrix[j][i];
-                list[j].insert(characters[i], temp);
+                double distance = matrix[j][i]; // distance to planet
+                list[j].insert(planets[i], distance);
             }
         }
     }
 }
 
 // print adjacency list
-void printAdjacencyList(LinkedList<char> *list) {
+void printAdjacencyList(LinkedList<Planet> *list) {
     cout << "The Adjacency List of the Planets:" << endl << endl;
 
     for (int i = 0; i < 10; i++) {

@@ -8,8 +8,8 @@ using namespace std;
 template <typename T>
 struct Node
 {
-    T info; // info
-    double value; // value
+    T info;         // info
+    double value;   // value, the value to be sorted and displayed
     Node<T> *next;
 };
 
@@ -152,16 +152,6 @@ public:
         return os;
     }
 
-    void printEdgesList() 
-    {   
-        cout << "HI" << endl;
-        Node<T> *ptr = start; 
-        while (ptr != NULL) { 
-            cout << ptr->value << " "; 
-            ptr = ptr->next; 
-        } 
-        cout << "ENDED" << endl;
-    } 
 };
 
 #endif
