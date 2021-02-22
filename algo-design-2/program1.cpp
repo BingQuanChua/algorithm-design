@@ -12,106 +12,112 @@ using namespace std;
 const int N = 10;
 char characters[] = "ABCDEFGHIJ";
 
-LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> values);
-LinkedList<Edge> readPlanetEdges(Planet *planets, LinkedList<Edge> edges, double matrix[][N], LinkedList<Planet> *list);
-void addEdge(double matrix[][N], int a, int b, double value);
-void printAdjacencyMatrix(double matrix[][N]);
-void printAdjacencyList(LinkedList<Planet> *list);
-void writeDistance(double matrix[][N]);
+LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> planetValues);
+LinkedList<Edge> readPlanetEdges(Planet *planets, LinkedList<Edge> planetEdges, double adjMatrix[][N], LinkedList<Planet> *adjList);
+void addEdge(double adjMatrix[][N], int a, int b, double value);
+void printAdjacencyMatrix(double adjMatrix[][N]);
+void printAdjacencyList(LinkedList<Planet> *adjList);
+void writeDistance(double adjMatrix[][N]);
 
 int main() {
 
     Planet planets[N];           // array of planets
-    LinkedList<Planet> values;   // list of planet values
-    LinkedList<Edge> edges;      // list of planet distances
-    double matrix[N][N] = {0};   // adjacency matrix of planets
-    LinkedList<Planet> list[N];    // adjacency list of planets
+    LinkedList<Planet> planetValues;   // list of planet values
+    LinkedList<Edge> planetEdges;      // list of planet distances
+    double adjMatrix[N][N] = {0};   // adjacency matrix of planets
+    LinkedList<Planet> adjList[N];    // adjacency list of planets
     
-    printAdjacencyMatrix(matrix);
-    printAdjacencyList(list);
     // read planet details from file
-    values = readPlanetDetails(planets, values);
+    planetValues = readPlanetDetails(planets, planetValues);
 
     // read planet edges from file
-    edges = readPlanetEdges(planets, edges, matrix, list);
+    planetEdges = readPlanetEdges(planets, planetEdges, adjMatrix, adjList);
 
     // print adjacency matrix
-    printAdjacencyMatrix(matrix);
+    printAdjacencyMatrix(adjMatrix);
     
     // print adjacency list
-    printAdjacencyList(list);
+    printAdjacencyList(adjList);
 
     // write planet distances to a text file
-    writeDistance(matrix);  
+    writeDistance(adjMatrix);  
 
 
     // list of planet distances
     cout << endl << "List of Planet Distances: " << endl;
-    cout << edges << endl;
+    cout << planetEdges << endl;
 
     // does merge sort on edge
     // ascending order of distance
-    edges.startMergeSort(0);
+    planetEdges.startMergeSort(0);
     cout << endl << "List of Planet Distances sorted ascendingly: " << endl;
-    cout << edges << endl;
+    cout << planetEdges << endl << endl;
 
     
     // list of planet values
     cout << endl << "List of Planet Values: " << endl;
-    cout << values << endl;
+    cout << planetValues << endl;
 
     // does merge sort on value
     // descending order of value
-    values.startMergeSort(1);
+    planetValues.startMergeSort(1);
     cout << endl << "List of Planet Values sorted descendingly: " << endl;
-    cout << values << endl;
+    cout << planetValues << endl << endl << endl;
 
 
     return 0;
 }
 
-// read planet details from the generated data
-LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> values) {
-
-    string details;
+// read planet details from the generated planet data
+LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> planetValues) {
+    
+    string name;
+    int x, y, z, weight, profit;
+    int c = 0;
     ifstream file("generated-data/A2planets.txt");
-    for (int i = 0; i < 10; i++) {
-        Planet p;
-        file >> details;
-        p.name = details;
-        p.planetCharacter = details.at(7);
-        file >> details;
-        p.x = stoi(details);
-        file >> details;
-        p.y = stoi(details);
-        file >> details;
-        p.z = stoi(details);
-        file >> details;
-        p.weight = stoi(details);
-        file >> details;
-        p.profit = stoi(details);
-        
-        if(i != 0) {
-            // not planet A
-            // planet A is unable to calculate value
 
+    cout << "Planet details:" << endl << endl;
+    cout << " Planet\t\t Coordinates\tWeight\tProfit" << endl;
+    while(file >> name >> x >> y >> z >> weight >> profit){
+
+        Planet p;
+        p.name = name;
+        p.planetCharacter = name.at(7);
+        p.x = x;
+        p.y = y;
+        p.z = z;
+        p.weight = weight;
+        p.profit = profit;
+        
+        cout << name << "\t(" << x << "," << y << "," << z << ") \t" << setw(4) << weight << " \t" << setw(4) << profit;
+
+        if(weight != 0) {
+            // not planet A, it does not have weight
             // insert to planet values
             double value = p.calculateValue();
-            values.insert(p, value);
+            planetValues.insert(p, value);
         }
-
+        
         // stores each planet into the array
-        planets[i] = p;
+        planets[c] = p;
+        c++;
+
+        cout << endl;
     }
     file.close();
+    cout << endl << endl;
 
-    return values;
+    return planetValues;
 }
 
-LinkedList<Edge> readPlanetEdges(Planet *planets, LinkedList<Edge> edges, double matrix[][N], LinkedList<Planet> *list) {
+// read planet details from the planet edges data
+LinkedList<Edge> readPlanetEdges(Planet *planets, LinkedList<Edge> planetEdges, double adjMatrix[][N], LinkedList<Planet> *adjList) {
+    
     int numOfEdges;
     int p1, p2;
     ifstream file("generated-data/planet-edges.txt");
+    
+    cout << "Planet edges:" << endl << endl;
     file >> numOfEdges;
     for (int i = 0; i < numOfEdges; i++) {
         file >> p1 >> p2;
@@ -122,29 +128,33 @@ LinkedList<Edge> readPlanetEdges(Planet *planets, LinkedList<Edge> edges, double
         e.p2 = planets[p2];
 
         double distance = e.calculateDistance();
+        cout << e.p1 << e.p2 << ": " << distance << endl;
+
+
         // insert edge into edges linkedlist
-        edges.insert(e, distance);
+        planetEdges.insert(e, distance);
 
         // insert into adjacency matrix
-        addEdge(matrix, p1, p2, distance);
+        addEdge(adjMatrix, p1, p2, distance);
 
         // insert into adjacency list
-        list[p1].insert(planets[p2], distance);
-        list[p2].insert(planets[p1], distance);
+        adjList[p1].insert(planets[p2], distance);
+        adjList[p2].insert(planets[p1], distance);
     }
+    cout << endl << endl;
 
-    return edges;
+    return planetEdges;
 }
 
 // (for adjacency matrix) adds a new edge in the map
-void addEdge(double matrix[][N], int a, int b, double value) {
-    matrix[a][b] = value;
-    matrix[b][a] = value;
+void addEdge(double adjMatrix[][N], int a, int b, double value) {
+    adjMatrix[a][b] = value;
+    adjMatrix[b][a] = value;
 }
 
 // print adjacency matrix
-void printAdjacencyMatrix(double matrix[][N]) {
-    cout << "The Adjacency Matrix of the Planets:" << endl << endl;
+void printAdjacencyMatrix(double adjMatrix[][N]) {
+    cout << "Adjacency Matrix of the Planets:" << endl << endl;
 
     cout << " ";
     for (int i = 0; i < 10; i++) {
@@ -154,33 +164,32 @@ void printAdjacencyMatrix(double matrix[][N]) {
     for (int j = 0; j < 10; j++) {
         cout << characters[j] << " ";
         for (int i = 0; i < 10; i++) {
-            cout << setw(9) << matrix[j][i] << " ";
+            cout << setw(9) << adjMatrix[j][i] << " ";
         }
         cout << endl;
     }
-    cout << endl;
+    cout << endl << endl;
 }
 
 // print adjacency list
-void printAdjacencyList(LinkedList<Planet> *list) {
-    cout << "The Adjacency List of the Planets:" << endl << endl;
+void printAdjacencyList(LinkedList<Planet> *adjList) {
+    cout << "Adjacency List of the Planets:" << endl << endl;
 
     for (int i = 0; i < 10; i++) {
         cout << characters[i] << "-   ";
-        cout << list[i] << endl;
+        cout << adjList[i] << endl;
     }
-
-    cout << endl;
+    cout << endl << endl;
 }
 
-// generate planet distance to a .txt file
-void writeDistance(double matrix[][N]) {
+// generate planet distance to a text file
+void writeDistance(double adjMatrix[][N]) {
     ofstream file;
     file.open("generated-data/planet-distances.txt"); 
     
     for (int j = 0; j < 10; j++) {
         for (int i = 0; i < 10; i++) {
-            file << matrix[j][i] << " ";
+            file << adjMatrix[j][i] << " ";
         }
         file << endl;
     }
