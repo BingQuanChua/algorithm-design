@@ -176,7 +176,7 @@ void printAdjacencyList(LinkedList<Planet> *list) {
 // generate planet distance to a .txt file
 void writeDistance(double matrix[][N]) {
     ofstream file;
-    file.open("generated-data/planet-distances.txt");
+    file.open("generated-data/planet-distances.txt"); 
     
     for (int j = 0; j < 10; j++) {
         for (int i = 0; i < 10; i++) {
