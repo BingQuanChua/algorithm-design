@@ -11,7 +11,7 @@ const int NUM_VERTEX = 10; // declare the number of vertex
 const int GRAPH_COL = 13;
 
 void getDistance(double matrix[][NUM_VERTEX]); // read planet distances from the text file
-void initAdjancencyMatrix(double matrix[][NUM_VERTEX]); // initialize the map
+void readPlanetEdges(double matrix[][NUM_VERTEX],char graphBefore[][GRAPH_COL]); // read planet edges from the text file
 void addEdge(double matrix[][NUM_VERTEX],int a, int b, double value); // (for adjacency matrix) adds a new edge in the map
 void printAdjacencyMatrix(double matrix[][NUM_VERTEX]); // display the adjacency matrix
 void printShortestDistance(double distance[]); // print the constructed distance array
@@ -20,7 +20,6 @@ void dijkstra(double matrix[][NUM_VERTEX],char graphAfter[][GRAPH_COL],int sourc
 void initmap(char graph[][GRAPH_COL]);
 void displayGraph(char graph[][GRAPH_COL]);
 void connect(char graph[][GRAPH_COL], int a, int b);
-void initialGraphEdges(char graphBefore[][GRAPH_COL]);
 
 int main() {
 
@@ -31,8 +30,7 @@ int main() {
 
     initmap(graphBefore);
 	initmap(graphAfter);
-	initialGraphEdges(graphBefore);
-    initAdjancencyMatrix(matrix);
+    readPlanetEdges(matrix,graphBefore);
     getDistance(matrix);
     cout << "The graph of the planet location:";
     displayGraph(graphBefore);
@@ -48,13 +46,18 @@ int main() {
 void getDistance(double matrix[][NUM_VERTEX]) {
     string details;
     ifstream file("generated-data/planet-distances.txt");
-    for (int i = 0; i < 10; i++) {
-        for(int j = 0; j < 10; j++){
-        // read in the value of distance into the matrices
-            file >> matrix[i][j];
+    if(file){
+        for (int i = 0; i < 10; i++) {
+            for(int j = 0; j < 10; j++){
+            // read in the value of distance into the matrices
+                file >> matrix[i][j];
+            }
         }
+        file.close();
     }
-    file.close();
+    else{
+        cout << "Unable to open the file." << endl;
+    }
 }
 
 //Initialize the graph map
@@ -80,26 +83,25 @@ void initmap(char graph[][GRAPH_COL]){
     graph[2][3] = 'J';
 }
 
-// initialize the map
-void initAdjancencyMatrix(double matrix[][NUM_VERTEX]) {
-    addEdge(matrix, 0, 3, 1); // AD
-    addEdge(matrix, 0, 5, 1); // AF
-    addEdge(matrix, 0, 7, 1); // AH
-    addEdge(matrix, 0, 9, 1); // AJ
-    addEdge(matrix, 3, 9, 1); // DJ
-    addEdge(matrix, 7, 9, 1); // HJ
-    addEdge(matrix, 5, 7, 1); // FH
-    addEdge(matrix, 1, 3, 1); // BD
-    addEdge(matrix, 6, 9, 1); // GJ
-    addEdge(matrix, 7, 8, 1); // HI
-    addEdge(matrix, 2, 5, 1); // CF
-    addEdge(matrix, 1, 6, 1); // BG
-    addEdge(matrix, 6, 8, 1); // GI
-    addEdge(matrix, 2, 8, 1); // CI
-    addEdge(matrix, 1, 4, 1); // BE
-    addEdge(matrix, 4, 6, 1); // EG
-    addEdge(matrix, 4, 8, 1); // EI
-    addEdge(matrix, 2, 4, 1); // CE
+//Read planet edges from the text file
+void readPlanetEdges(double matrix[][NUM_VERTEX],char graphBefore[][GRAPH_COL]) {
+    int numOfEdges;
+    int p1, p2;
+    ifstream file("generated-data/planet-edges.txt");
+    file >> numOfEdges;
+    if(file){
+        for (int i = 0; i < numOfEdges; i++) {
+            file >> p1 >> p2;
+            // initialize the map
+            addEdge(matrix, p1, p2, 1);
+            // initial graph before finding the shortest path
+            connect(graphBefore,p1,p2);
+        }
+    file.close();
+    }
+    else{
+        cout << "Unable to open the file." << endl;
+    }
 }
 
 // (for adjacency matrix) adds a new edge in the map
@@ -384,10 +386,10 @@ int minimumDistance(double distance[],bool sptSet[]){
 void printShortestDistance(double distance[]){
     char characters[] = "ABCDEFGHIJ";
     cout << "\n\nThe shortest distance to each planet:\n";
-    cout<<"Vertex\t\tDistance from source"<<endl;
+    cout<<"Planets\t\tDistance from source"<<endl;
 	for(int i=0;i<NUM_VERTEX;i++){
 		//char c=65+i;
-		cout<<characters[i]<<"\t\t"<<distance[i]<<endl;
+		cout<<"Planet_" <<characters[i]<<"\t"<<distance[i]<<endl;
 	}
 	cout << endl;
 }
@@ -441,28 +443,6 @@ void dijkstra(double matrix[][NUM_VERTEX],char graphAfter[][GRAPH_COL],int sourc
     }
     // print the constructed distance array
     printShortestDistance(distance);
-}
-
-// initial graph before finding the shortest path
-void initialGraphEdges(char graphBefore[][GRAPH_COL]){
-    connect(graphBefore,0,3);     // A-D
-    connect(graphBefore,0,9);    // A-j
-    connect(graphBefore,0,7);     // A-H
-    connect(graphBefore,0,5);     // A-F
-    connect(graphBefore,1,3);     // B-D
-    connect(graphBefore,1,4);     // B-E
-    connect(graphBefore,1,6);     // B-G
-    connect(graphBefore,2,5);     // C-F
-    connect(graphBefore,2,4);     // C-E
-    connect(graphBefore,2,8);     // C-I
-    connect(graphBefore,3,9);    // D-J
-    connect(graphBefore,4,6);     // E-G
-    connect(graphBefore,4,8);     // E-I
-    connect(graphBefore,5,7);     // F-H
-    connect(graphBefore,6,9);    // G-J
-    connect(graphBefore,6,8);     // G-I
-    connect(graphBefore,7,9);    // H-J
-    connect(graphBefore,7,8);     // H-I
 }
 
 //Display the graph
