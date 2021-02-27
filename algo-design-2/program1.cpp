@@ -74,10 +74,11 @@ LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> planetV
     string name;
     int x, y, z, weight, profit;
     int c = 0;
+    double value = 0;
     ifstream file("generated-data/A2planets.txt");
 
-    cout << "Planet details:" << endl << endl;
-    cout << " Planet\t\t Coordinates\tWeight\tProfit" << endl;
+    cout << "\nPlanet details:" << endl << endl;
+    cout << " Planet\t\t Coordinates\tWeight\tProfit\t Value" << endl;
     while(file >> name >> x >> y >> z >> weight >> profit){
 
         Planet p;
@@ -94,7 +95,7 @@ LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> planetV
         if(weight != 0) {
             // not planet A, it does not have weight
             // insert to planet values
-            double value = p.calculateValue();
+            value = p.calculateValue();
             planetValues.insert(p, value);
         }
         
@@ -102,7 +103,7 @@ LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> planetV
         planets[c] = p;
         c++;
 
-        cout << endl;
+        cout << "\t" << setw(7) << value << endl;
     }
     file.close();
     cout << endl << endl;

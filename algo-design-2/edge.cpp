@@ -17,6 +17,7 @@ struct Edge
 
 };
 
+// print the edge ("XX") when it is called
 ostream &operator<< (ostream &os, const Edge &e) {
     string edge = "";
     edge += e.p1.planetCharacter;

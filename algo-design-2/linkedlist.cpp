@@ -34,22 +34,22 @@ public:
     }
 
     void splitLinkedList(Node<T> *head, Node<T> **a, Node<T> **b) {
-        Node<T> *fast;
-        Node<T> *slow;
-        slow = head;
-        fast = head->next;
+        Node<T> *front;
+        Node<T> *back;
+        back = head;
+        front = head->next;
 
-        while (fast != NULL) {
-            fast = fast->next;
-            if (fast != NULL) {
-                slow = slow->next;
-                fast = fast->next;
+        while (front != NULL) {
+            front = front->next;
+            if (front != NULL) {
+                back = back->next;
+                front = front->next;
             }
         }
 
         *a = head;
-        *b = slow->next;
-        slow->next = NULL;
+        *b = back->next;
+        back->next = NULL;
     }
     
     Node<T> * merge(Node<T> *a, Node<T> *b, int order) {
@@ -94,10 +94,10 @@ public:
         mergeSort(&start, order);
     }
 
-    void mergeSort(Node<T> **headStart, int order) {
-        Node<T> *head = *headStart;
-        Node<T> *a;
-        Node<T> *b;
+    void mergeSort(Node<T> **start, int order) {
+        Node<T> *head = *start;
+        Node<T> *a; // first half
+        Node<T> *b; // second half
 
         if((head == NULL) || (head->next == NULL)) {
             return;
@@ -107,7 +107,7 @@ public:
         mergeSort(&a, order);
         mergeSort(&b, order);
 
-        *headStart = merge(a, b, order);
+        *start = merge(a, b, order);
     }
 
 

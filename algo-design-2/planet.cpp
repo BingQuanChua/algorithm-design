@@ -20,6 +20,7 @@ struct Planet
     }
 };
 
+// print the planet character ("X") when it is called
 ostream &operator<< (ostream &os, const Planet &p) {
     os << p.planetCharacter;
     return os;
