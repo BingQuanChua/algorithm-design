@@ -285,7 +285,7 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
 
 int main()
 {
-    static int planetNum = 10;
+    const int planetNum = 10;
     Planet planetList[planetNum];
     string tempName;
     int tempX, tempY, tempZ, tempWeight, tempProfit, edge, tempP1, tempP2;
