@@ -285,11 +285,12 @@ void connect(char g[7][13], int a, int b)   //Connect the edges of the graph
 
 int main()
 {
-    Planet planetList[10];
+    static int planetNum = 10;
+    Planet planetList[planetNum];
     string tempName;
     int tempX, tempY, tempZ, tempWeight, tempProfit, edge, tempP1, tempP2;
     KruskalPlanet *kp;
-    KruskalPlanet ep[18];
+    KruskalPlanet ep[100];
     fstream planetFile;
     fstream edgeFile;
 	PlanetMap map(10);
@@ -305,7 +306,7 @@ int main()
 
     if(planetFile)                      //Load data from the file into an array of Planet class
     {
-        for(int i=0; i<10; i++)
+        for(int i=0; i<planetNum; i++)
         {
             Planet temp;
             planetFile >> tempName;
@@ -334,7 +335,7 @@ int main()
     {
         edgeFile >> edge;
 
-        for(int i=0; i<18; i++)
+        for(int i=0; i<edge; i++)
         {
             KruskalPlanet tempEdge;
 
