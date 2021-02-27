@@ -29,7 +29,7 @@ int main() {
     
     // read planet details from file
     planetValues = readPlanetDetails(planets, planetValues);
-
+    
     // read planet edges from file
     planetEdges = readPlanetEdges(planets, planetEdges, adjMatrix, adjList);
 
@@ -77,36 +77,42 @@ LinkedList<Planet> readPlanetDetails(Planet *planets, LinkedList<Planet> planetV
     double value = 0;
     ifstream file("generated-data/A2planets.txt");
 
-    cout << "\nPlanet details:" << endl << endl;
-    cout << " Planet\t\t Coordinates\tWeight\tProfit\t Value" << endl;
-    while(file >> name >> x >> y >> z >> weight >> profit){
+    if(file) {
+        cout << "\nPlanet details:" << endl << endl;
+        cout << " Planet\t\t Coordinates\tWeight\tProfit\t Value" << endl;
+        while(file >> name >> x >> y >> z >> weight >> profit){
 
-        Planet p;
-        p.name = name;
-        p.planetCharacter = name.at(7);
-        p.x = x;
-        p.y = y;
-        p.z = z;
-        p.weight = weight;
-        p.profit = profit;
-        
-        cout << name << "\t(" << x << "," << y << "," << z << ") \t" << setw(4) << weight << " \t" << setw(4) << profit;
+            Planet p;
+            p.name = name;
+            p.planetCharacter = name.at(7);
+            p.x = x;
+            p.y = y;
+            p.z = z;
+            p.weight = weight;
+            p.profit = profit;
+            
+            cout << name << "\t(" << x << "," << y << "," << z << ") \t" << setw(4) << weight << " \t" << setw(4) << profit;
 
-        if(weight != 0) {
-            // not planet A, it does not have weight
-            // insert to planet values
-            value = p.calculateValue();
-            planetValues.insert(p, value);
+            if(weight != 0) {
+                // not planet A, it does not have weight
+                // insert to planet values
+                value = p.calculateValue();
+                planetValues.insert(p, value);
+            }
+            
+            // stores each planet into the array
+            planets[c] = p;
+            c++;
+
+            cout << "\t" << setw(7) << value << endl;
         }
-        
-        // stores each planet into the array
-        planets[c] = p;
-        c++;
-
-        cout << "\t" << setw(7) << value << endl;
+        file.close();
+        cout << endl << endl;
     }
-    file.close();
-    cout << endl << endl;
+    else {
+        cout << "\n<ERROR>\nFile A2planets.txt not found.\nPlease check /generated-data directory\n\n" << endl;
+        exit(0);
+    }    
 
     return planetValues;
 }
@@ -118,31 +124,37 @@ LinkedList<Edge> readPlanetEdges(Planet *planets, LinkedList<Edge> planetEdges, 
     int p1, p2;
     ifstream file("generated-data/planet-edges.txt");
     
-    cout << "Planet edges:" << endl << endl;
-    file >> numOfEdges;
-    for (int i = 0; i < numOfEdges; i++) {
-        file >> p1 >> p2;
+    if (file) {
+        cout << "Planet edges:" << endl << endl;
+        file >> numOfEdges;
+        for (int i = 0; i < numOfEdges; i++) {
+            file >> p1 >> p2;
 
-        // create new edge
-        Edge e;
-        e.p1 = planets[p1];
-        e.p2 = planets[p2];
+            // create new edge
+            Edge e;
+            e.p1 = planets[p1];
+            e.p2 = planets[p2];
 
-        double distance = e.calculateDistance();
-        cout << e.p1 << e.p2 << ": " << distance << endl;
+            double distance = e.calculateDistance();
+            cout << e.p1 << e.p2 << ": " << distance << endl;
 
 
-        // insert edge into edges linkedlist
-        planetEdges.insert(e, distance);
+            // insert edge into edges linkedlist
+            planetEdges.insert(e, distance);
 
-        // insert into adjacency matrix
-        addEdge(adjMatrix, p1, p2, distance);
+            // insert into adjacency matrix
+            addEdge(adjMatrix, p1, p2, distance);
 
-        // insert into adjacency list
-        adjList[p1].insert(planets[p2], distance);
-        adjList[p2].insert(planets[p1], distance);
+            // insert into adjacency list
+            adjList[p1].insert(planets[p2], distance);
+            adjList[p2].insert(planets[p1], distance);
+        }
+        cout << endl << endl;
     }
-    cout << endl << endl;
+    else {
+        cout << "\n<ERROR>\nFile planet-edges.txt not found.\nPlease check /generated-data directory\n\n" << endl;
+        exit(0);
+    }
 
     return planetEdges;
 }
