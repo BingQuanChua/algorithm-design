@@ -14,4 +14,14 @@ In Assignment 1, we generated a few sets of emails and stored them into differen
 
 ## Assignment 2
 
-Work in progress.
+In Assignment 2, we are required to analyze planet data according to this map:
+
+![Set local path](https://github.com/BingQuanChua/algorithm-design/blob/main/algo-design-2/img/map.PNG?raw=true)
+
+algo-design-2 consists of 4 different programs:
+
+1. Planet Data Generator
+2. Planet Edges and Value with Merge-Sort
+3. Dijakstra's Algorithm to find Shortest Paths
+4. Kruskal's Algorithm to find the Minimum Spanning Tree
+
